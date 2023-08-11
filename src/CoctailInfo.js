@@ -7,17 +7,46 @@ function CoctailImg({img}) {
     );
 }
 
-function Recipe() {
+function Recipe({drink}) {
+    // Создаются пустые массивы, в которых будут храниться ингридиенты и их кол-во
+    const ingredients = [];
+    const measures = [];
+
+    // Цикл, в котором у объекта drink каждое свойство strIngridient и strMeasure проверяется на true
+    // Если true, то ингридиент и его количество заносятся в массивы выше
+    for (let i=1; i<=15; i++) {
+        const ingrName = `strIngredient${i}`;
+        const ingrMeasure = `strMeasure${i}`;
+        if (drink[ingrName] && drink[ingrMeasure]) {
+            ingredients.push(drink[ingrName]);
+            measures.push(drink[ingrMeasure]);
+        }
+    }
+    
+    // Рендеринг списка
+    const ingridientList = ingredients.map(ingridient =>
+        <li key={ingredients.indexOf(ingridient)}>
+            {measures[ingredients.indexOf(ingridient)] + ' ' + ingridient}
+        </li>
+    )
+
     return (
         <div>
             <div>
+                <span>NAME</span>
+                <p>{drink.strDrink}</p>
+            </div>
+            <div>
                 <span>INGRIDIENTS</span>
+                <ul>{ingridientList}</ul>
             </div>
             <div>
                 <span>GLASS</span>
+                <p>{drink.strGlass}</p>
             </div>
             <div>
                 <span>INSTRUCTIONS</span>
+                <p>{drink.strInstructions}</p>
             </div>
         </div>
     );
@@ -60,7 +89,7 @@ export default function CoctailInfo({searchText}) {
             {drink && (
                 <>
                     <CoctailImg img={drink.strDrinkThumb} />
-                    <Recipe />
+                    <Recipe drink = {drink}/>
                 </>
             )}
         </div>
