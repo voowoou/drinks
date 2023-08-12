@@ -3,12 +3,13 @@ import styles from "./CocktailInfo.module.css"
 
 function CocktailImg({img}) {
     return (
-        <img 
-            src={img} 
-            alt="A coctail thumbnail"
-            className={styles.cocktailImg}
-        >
-        </img>
+        <div className={styles.cocktailImg}>
+            <img 
+                src={img} 
+                alt="A coctail thumbnail"
+            >
+            </img>
+        </div>
     );
 }
 

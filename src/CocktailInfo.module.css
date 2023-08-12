@@ -5,7 +5,7 @@
 }
 
 .cocktailImg {
-    width: 34vw;
+    max-width: 34vw;
     height: auto;
     margin: 0 4.2vw 0 10vw;
 }
@@ -25,7 +25,7 @@
     margin-bottom: 3vh;
 }
 
-h3 {
+.cocktailInfo h3 {
     font-size: 2rem;
     font-style: normal;
     font-weight: 700;
