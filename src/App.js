@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Header from './Header';
 import SearchBar from "./SearchBar";
-import CoctailInfo from "./CoctailInfo";
+import CocktailInfo from "./CocktailInfo";
 import Footer from "./Footer";
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
     <>
       <Header />
       <SearchBar onSearch={handleSearch} />
-      <CoctailInfo searchText={searchText}/>
+      <CocktailInfo searchText={searchText}/>
       <Footer />
     </>
   );

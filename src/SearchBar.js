@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./SearchBar.module.css";
 
 function Form({ onSubmit }) {
     const [searchText, setSearchText] = useState(""); // Состояние для хранения текста
@@ -13,18 +14,20 @@ function Form({ onSubmit }) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.form}>
             <input 
-                type="search" 
+                type="text" 
                 name="search-field" 
                 placeholder="margarita"
                 value={searchText} // Привязываем значение инпута к состоянию
                 onChange={handleInputChange} // Обработчик изменения текста
+                className={styles.field}
             />
             <input 
                 type="submit" 
                 name="search-button" 
                 value="SEARCH"
+                className={styles.submit}
             />
         </form>
     );    
@@ -36,5 +39,7 @@ export default function SearchBar({onSearch}) {
         onSearch(searchText); // Передаем searchText в родительский компонент
     };
 
-    return <Form onSubmit={handleFormSubmit} />;
+    return <Form 
+                onSubmit={handleFormSubmit}
+            />;
 }

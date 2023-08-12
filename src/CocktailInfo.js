@@ -1,9 +1,14 @@
-import React from "react";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import styles from "./CocktailInfo.module.css"
 
-function CoctailImg({img}) {
+function CocktailImg({img}) {
     return (
-        <img src={img} alt="A coctail thumbnail"></img>
+        <img 
+            src={img} 
+            alt="A coctail thumbnail"
+            className={styles.cocktailImg}
+        >
+        </img>
     );
 }
 
@@ -31,28 +36,27 @@ function Recipe({drink}) {
     )
 
     return (
-        <div>
-            <div>
-                <span>NAME</span>
-                <p>{drink.strDrink}</p>
+        <div className={styles.cocktailRecipe}>
+            <div className={styles.cocktailName}>
+                <h2>{drink.strDrink}</h2>
             </div>
-            <div>
-                <span>INGRIDIENTS</span>
+            <div className={styles.cocktailIngridients}>
+                <h3>INGRIDIENTS</h3>
                 <ul>{ingridientList}</ul>
             </div>
-            <div>
-                <span>GLASS</span>
+            <div className={styles.cocktailGlass}>
+                <h3>GLASS</h3>
                 <p>{drink.strGlass}</p>
             </div>
-            <div>
-                <span>INSTRUCTIONS</span>
+            <div className={styles.cocktailInstructions}>
+                <h3>INSTRUCTIONS</h3>
                 <p>{drink.strInstructions}</p>
             </div>
         </div>
     );
 }
 
-export default function CoctailInfo({searchText}) {
+export default function CocktailInfo({searchText}) {
     // Объявление стейта с данными о напитке
     const [drink, setDrink] = useState(null);
 
@@ -85,10 +89,10 @@ export default function CoctailInfo({searchText}) {
     }, [searchText]);
 
     return (
-        <div>
+        <div className={styles.cocktailInfo}>
             {drink && (
                 <>
-                    <CoctailImg img={drink.strDrinkThumb} />
+                    <CocktailImg img={drink.strDrinkThumb} />
                     <Recipe drink = {drink}/>
                 </>
             )}
