@@ -58,8 +58,10 @@
         margin-bottom: 20px;
         margin: 0 5vw 20px 5vw;
         width: 100%;
+        border-radius: 0;
     }
     .submit {
         margin-bottom: 20px;
+        border-radius: 0;
     }
 }
