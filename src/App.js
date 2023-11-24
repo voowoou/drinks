@@ -6,7 +6,7 @@ import CocktailInfo from "./CocktailInfo";
 import Footer from "./Footer";
 
 export default function App() {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState([]);
 
   const handleSearch = (searchText) => {
       // Обработка searchText или передача его в другой компонент

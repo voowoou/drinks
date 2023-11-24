@@ -1,102 +1,121 @@
+// CocktailInfo.js
 import React, { useState, useEffect } from "react";
-import styles from "./CocktailInfo.module.css"
+import styles from "./CocktailInfo.module.css";
 
-function CocktailImg({img}) {
-    return (
-        <div className={styles.cocktailImg}>
-            <img 
-                src={img} 
-                alt="A coctail thumbnail"
-            >
-            </img>
-        </div>
-    );
+function CocktailImg({ img }) {
+  return (
+    <div className={styles.cocktailImg}>
+      <img src={img} alt="A cocktail thumbnail" />
+    </div>
+  );
 }
 
-function Recipe({drink}) {
-    // Создаются пустые массивы, в которых будут храниться ингридиенты и их кол-во
-    const ingredients = [];
-    const measures = [];
+function Recipe({ drink }) {
+  const ingredients = [];
+  const measures = [];
 
-    // Цикл, в котором у объекта drink каждое свойство strIngridient и strMeasure проверяется на true
-    // Если true, то ингридиент и его количество заносятся в массивы выше
-    for (let i=1; i<=15; i++) {
-        const ingrName = `strIngredient${i}`;
-        const ingrMeasure = `strMeasure${i}`;
-        if (drink[ingrName] && drink[ingrMeasure]) {
-            ingredients.push(drink[ingrName]);
-            measures.push(drink[ingrMeasure]);
-        }
+  for (let i = 1; i <= 15; i++) {
+    const ingrName = `strIngredient${i}`;
+    const ingrMeasure = `strMeasure${i}`;
+    if (drink[ingrName] && drink[ingrMeasure]) {
+      ingredients.push(drink[ingrName]);
+      measures.push(drink[ingrMeasure]);
     }
-    
-    // Рендеринг списка
-    const ingridientList = ingredients.map(ingridient =>
-        <li key={ingredients.indexOf(ingridient)}>
-            {measures[ingredients.indexOf(ingridient)] + ' ' + ingridient}
-        </li>
-    )
+  }
 
-    return (
-        <div className={styles.cocktailRecipe}>
-            <div className={styles.cocktailName}>
-                <h2>{drink.strDrink}</h2>
-            </div>
-            <div className={styles.cocktailIngridients}>
-                <h3>INGRIDIENTS</h3>
-                <ul>{ingridientList}</ul>
-            </div>
-            <div className={styles.cocktailGlass}>
-                <h3>GLASS</h3>
-                <p>{drink.strGlass}</p>
-            </div>
-            <div className={styles.cocktailInstructions}>
-                <h3>INSTRUCTIONS</h3>
-                <p>{drink.strInstructions}</p>
-            </div>
-        </div>
-    );
+  const ingredientList = ingredients.map((ingredient, index) => (
+    <li key={index}>
+      {measures[index] + ' ' + ingredient}
+    </li>
+  ));
+
+  return (
+    <div className={styles.cocktailRecipe}>
+      <div className={styles.cocktailName}>
+        <h2>{drink.strDrink}</h2>
+      </div>
+      <div className={styles.cocktailIngredients}>
+        <h3>INGREDIENTS</h3>
+        <ul>{ingredientList}</ul>
+      </div>
+      <div className={styles.cocktailGlass}>
+        <h3>GLASS</h3>
+        <p>{drink.strGlass}</p>
+      </div>
+      <div className={styles.cocktailInstructions}>
+        <h3>INSTRUCTIONS</h3>
+        <p>{drink.strInstructions}</p>
+      </div>
+    </div>
+  );
 }
 
-export default function CocktailInfo({searchText}) {
-    // Объявление стейта с данными о напитке
+export default function CocktailInfo({ searchText }) {
     const [drink, setDrink] = useState(null);
-
-    // Хук useEffect для обработки асинхронной операции внутри функционального компонента
+    const [searchPerformed, setSearchPerformed] = useState(false);
+    const [notFound, setNotFound] = useState(false);
+  
     useEffect(() => {
-        // async...await функция с fetch-запросом к Api
-        const fetchData = async () => {
-            if (searchText !== false) {
-                try {
-                    const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + searchText);
-                    if (response.ok) {
-                        // Передаём полученные данные в переменную. При этом метод .json() автоматически парсит JSON-объект
-                        const jsonResponse = await response.json();
-                        // Обновляем стейт на новые полученные данные
-                        // При этом выбираем ключ "drinks" (.drinks) с массивом в качестве значения
-                        // Выбираем первый элемент массива, т.е. первый напиток по запросу
-                        setDrink(jsonResponse.drinks[0]);
-                    } else {
-                        // Если response.ok !== true, то выбрасывается ошибка
-                        throw new Error('Request failed!');
-                    }
-                } catch (error) { 
-                    // Тут также происходит обработка ошибок 
-                    window.alert('There is no such drink in the database, or the input name is incorrect. Please try again with another request.');
+      const fetchData = async () => {
+        try {
+          let apiUrl;
+  
+          if (searchText === 'random') {
+            apiUrl = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
+          } else if (searchText.trim() !== "") {
+            apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchText}`;
+          }
+  
+          if (apiUrl) {
+            const response = await fetch(apiUrl);
+            if (response.ok) {
+              const jsonResponse = await response.json();
+              const newDrink = jsonResponse.drinks ? jsonResponse.drinks[0] : null;
+  
+              if (newDrink) {
+                setDrink(newDrink);
+                setNotFound(false);
+              } else {
+                if (searchPerformed) {
+                  setNotFound(true);
                 }
+              }
+            } else {
+              throw new Error('Request failed!');
             }
-        };
-
+          }
+        } catch (error) {
+          if (searchPerformed) {
+            console.error('An error occurred during the request. Please try again.');
+          }
+        }
+      };
+  
+      if (searchPerformed || searchText === 'random') {
         fetchData();
-    }, [searchText]);
-
+      } else {
+        setSearchPerformed(true);
+      }
+    }, [searchText, searchPerformed]);
+  
     return (
-        <div className={styles.cocktailInfo}>
+      <div className={styles.cocktailInfo}>
+        {notFound ? (
+            <p className={styles.p}>
+                No such drink in the database, or the input name is incorrect.
+                Please try again with another request.
+            </p>
+        ) : (
+          <>
             {drink && (
-                <>
-                    <CocktailImg img={drink.strDrinkThumb} />
-                    <Recipe drink = {drink}/>
-                </>
+              <>
+                <CocktailImg img={drink.strDrinkThumb} />
+                <Recipe drink={drink} />
+              </>
             )}
-        </div>
+          </>
+        )}
+      </div>
     );
-}
+  }
+  

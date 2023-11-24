@@ -1,45 +1,45 @@
+// SearchBar.js
 import React, { useState } from "react";
 import styles from "./SearchBar.module.css";
+import dice from "./dice.png";
 
-function Form({ onSubmit }) {
-    const [searchText, setSearchText] = useState(""); // Состояние для хранения текста
+export default function SearchBar({ onSearch }) {
+  const [searchText, setSearchText] = useState(""); // Состояние для хранения текста
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        onSubmit(searchText); // Вызываем переданный колбэк и передаем текст
-    };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (searchText.trim() !== "") {
+      onSearch(searchText);
+    }
+  };
 
-    const handleInputChange = (event) => {
-        setSearchText(event.target.value); // Обновляем состояние текста при вводе
-    };
+  const handleRandomClick = () => {
+    onSearch("random");
+  };
 
-    return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <input 
-                type="text" 
-                name="search-field" 
-                placeholder="margarita"
-                value={searchText} // Привязываем значение инпута к состоянию
-                onChange={handleInputChange} // Обработчик изменения текста
-                className={styles.field}
-            />
-            <input 
-                type="submit" 
-                name="search-button" 
-                value="SEARCH"
-                className={styles.submit}
-            />
-        </form>
-    );    
-}
+  const handleInputChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
-export default function SearchBar({onSearch}) {
-    const handleFormSubmit = (searchText) => {
-        // Здесь можно обработать переданный текст (например, передать его в другой компонент)
-        onSearch(searchText); // Передаем searchText в родительский компонент
-    };
-
-    return <Form 
-                onSubmit={handleFormSubmit}
-            />;
+  return (
+    <form onSubmit={handleSubmit} className={styles.formDiv}>
+      <input
+        type="text"
+        name="search-field"
+        placeholder="margarita"
+        value={searchText} // Привязываем значение инпута к состоянию
+        onChange={handleInputChange} // Обработчик изменения текста
+        className={styles.field}
+      />
+      <input
+        type="submit"
+        name="search-button"
+        value="SEARCH"
+        className={styles.submit}
+      />
+      <button type="button" className={styles.button} onClick={handleRandomClick}>
+        <img src={dice} alt="Get a random recipe button" />
+      </button>
+    </form>
+  );
 }
