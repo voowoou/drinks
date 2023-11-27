@@ -17,7 +17,7 @@ export default function App() {
     <>
       <Header />
       <SearchBar onSearch={handleSearch} />
-      <CocktailInfo searchText={searchText}/>
+      <CocktailInfo searchText={searchText} />
       <Footer />
     </>
   );

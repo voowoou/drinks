@@ -1,6 +1,56 @@
 // CocktailInfo.js
 import React, { useState, useEffect } from "react";
 import styles from "./CocktailInfo.module.css";
+import dice from "./dice.png";
+
+function RandomCoctail() {
+  const handleClick = () => {
+    setIsClicked(!isClicked)
+  }
+  
+  useEffect(() => {
+    const fetchRandom = async () => {
+      if (isClicked === true) {
+        try {
+          const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
+          if (response.ok) {
+            const jsonResponse = await response.json();
+            const newDrink = jsonResponse.drinks ? jsonResponse.drinks[0] : null;
+    
+            if (newDrink) {
+              setDrink(newDrink);
+              setNotFound(false);
+            } else {
+              if (searchPerformed) {
+                setNotFound(true);
+              }
+            }
+          } else {
+            throw new Error('Request failed!');
+          }
+        } catch (error) {
+          if (searchPerformed) {
+            console.error('An error occurred during the request. Please try again.');
+          }
+        }
+      }
+    }
+
+    fetchRandom();    
+  }, [isClicked])
+
+  return(
+    <div>
+      <button onClick={handleClick}>
+        <img 
+          src={dice} 
+          alt="Dice for random coctail"
+        / >
+      </button>
+      <CocktailImg />
+    </div>
+  );
+}
 
 function CocktailImg({ img }) {
   return (
@@ -54,7 +104,8 @@ export default function CocktailInfo({ searchText }) {
     const [drink, setDrink] = useState(null);
     const [searchPerformed, setSearchPerformed] = useState(false);
     const [notFound, setNotFound] = useState(false);
-  
+    const [isClicked, setIsClicked] = useState(false);
+    
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -90,8 +141,8 @@ export default function CocktailInfo({ searchText }) {
           }
         }
       };
-  
-      if (searchPerformed || searchText === 'random') {
+
+      if (searchPerformed) {
         fetchData();
       } else {
         setSearchPerformed(true);
@@ -99,22 +150,25 @@ export default function CocktailInfo({ searchText }) {
     }, [searchText, searchPerformed]);
   
     return (
-      <div className={styles.cocktailInfo}>
-        {notFound ? (
-            <p className={styles.p}>
-                No such drink in the database, or the input name is incorrect.
-                Please try again with another request.
-            </p>
-        ) : (
-          <>
-            {drink && (
-              <>
-                <CocktailImg img={drink.strDrinkThumb} />
-                <Recipe drink={drink} />
-              </>
-            )}
-          </>
-        )}
+      <div>
+        <div className={styles.cocktailInfo}>
+          {notFound ? (
+              <p className={styles.p}>
+                  No such drink in the database, or the input name is incorrect.
+                  Please try again with another request.
+              </p>
+          ) : (
+            <>
+              {drink && (
+                <>
+                  <CocktailImg img={drink.strDrinkThumb} />
+                  <Recipe drink={drink} />
+                </>
+              )}
+            </>
+          )}
+        </div>
+        <RandomCoctail isClicked={isClicked} setIsClicked={setIsClicked} />
       </div>
     );
   }

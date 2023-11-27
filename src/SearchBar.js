@@ -1,9 +1,8 @@
 // SearchBar.js
 import React, { useState } from "react";
 import styles from "./SearchBar.module.css";
-import dice from "./dice.png";
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar({ onSearch, onClick }) {
   const [searchText, setSearchText] = useState(""); // Состояние для хранения текста
 
   const handleSubmit = (event) => {
@@ -11,10 +10,6 @@ export default function SearchBar({ onSearch }) {
     if (searchText.trim() !== "") {
       onSearch(searchText);
     }
-  };
-
-  const handleRandomClick = () => {
-    onSearch("random");
   };
 
   const handleInputChange = (event) => {
@@ -37,9 +32,6 @@ export default function SearchBar({ onSearch }) {
         value="SEARCH"
         className={styles.submit}
       />
-      <button type="button" className={styles.button} onClick={handleRandomClick}>
-        <img src={dice} alt="Get a random recipe button" />
-      </button>
     </form>
   );
 }
