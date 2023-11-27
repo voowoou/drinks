@@ -95,5 +95,6 @@
     .button {
         width: 90vw;
         margin: 100px 5vw 80px 5vw;
+        font-size: 1.5rem;
     }
 }
