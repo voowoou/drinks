@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-
 import Header from './Header';
 import SearchBar from "./SearchBar";
-import CocktailInfo from "./CocktailInfo";
+import CocktailInfo from "./CoctailInfo";
 import Footer from "./Footer";
 
 export default function App() {

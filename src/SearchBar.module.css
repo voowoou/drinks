@@ -1,7 +1,7 @@
 .formDiv {
     margin: 0 10vw 80px 10vw;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
     width: 80vw;
 }
@@ -10,7 +10,7 @@
     display: flex;
     background: #FFF;
     color: #4F4F4F;
-    width: 50vw;
+    width: 65vw;
     height: 70px;
     color: var(#4F4F4F);
     font-size: 2.25rem;
@@ -34,25 +34,13 @@
     font-style: normal;
     font-weight: 700;
     padding: 0 3vw;
-    margin-right: 2vw;
-}
-
-.button {
-    display: block;
-    width: 70px;
-    height: 70px;
-}
-
-.button img {
-    width: 70px;
-    height: 70px;
 }
 
 @media only screen and (max-width: 768px) {
     .formDiv {
         margin: 0 0 50px 0;
         justify-content: space-evenly;
-        width: 100%
+        width: 95%
     }
     .field {
         margin-bottom: 20px;

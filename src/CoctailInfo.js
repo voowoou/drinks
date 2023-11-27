@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CocktailInfo.module.css";
-import dice from "./dice.png";
 
 function CocktailImg({img}) {
     return (
@@ -50,8 +49,57 @@ function Recipe({drink}) {
     );
 };
 
-export default function CocktailRequest({searchText}) {
+function RandomCocktailImg({randomImg}) {
+  return (
+      <div className={styles.cocktailImg}>
+      <img src={randomImg} alt="A random cocktail thumbnail" />
+      </div>
+  );
+};
+
+function RandomRecipe({randomDrink}) {
+  const ingredients = [];
+  const measures = [];
+
+  for (let i = 1; i <= 15; i++) {
+      const ingrName = `strIngredient${i}`;
+      const ingrMeasure = `strMeasure${i}`;
+      if (randomDrink[ingrName] && randomDrink[ingrMeasure]) {
+      ingredients.push(randomDrink[ingrName]);
+      measures.push(randomDrink[ingrMeasure]);
+      }
+  }
+
+  const ingredientList = ingredients.map((ingredient, index) => (
+      <li key={index}>
+      {measures[index] + ' ' + ingredient}
+      </li>
+  ));
+
+  return (
+      <div className={styles.cocktailRecipe}>
+      <div className={styles.cocktailName}>
+          <h2>{randomDrink.strDrink}</h2>
+      </div>
+      <div className={styles.cocktailIngredients}>
+          <h3>INGREDIENTS</h3>
+          <ul>{ingredientList}</ul>
+      </div>
+      <div className={styles.cocktailGlass}>
+          <h3>GLASS</h3>
+          <p>{randomDrink.strGlass}</p>
+      </div>
+      <div className={styles.cocktailInstructions}>
+          <h3>INSTRUCTIONS</h3>
+          <p>{randomDrink.strInstructions}</p>
+      </div>
+      </div>
+  );
+};
+
+export default function CocktailInfo({searchText}) {
     const [drink, setDrink] = useState(null);
+    const [randomDrink, setRandomDrink] = useState(null);
     const [searchPerformed, setSearchPerformed] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
@@ -101,29 +149,30 @@ export default function CocktailRequest({searchText}) {
     }, [searchText, searchPerformed]);
 
     // Случайный коктейль
-    useEffect(() => {
+    //useEffect(() => {
+    
+
+    //fetchRandom();    
+    //}, [isClicked]);
+
     const fetchRandom = async () => {
-      if (isClicked === true) {
-        try {
-          const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
-          if (response.ok) {
-            const jsonResponse = await response.json();
-            const newDrink = jsonResponse.drinks ? jsonResponse.drinks[0] : null;
-            setDrink(newDrink);
-          } else {
-            throw new Error('Request failed!');
-          }
-        } catch (error) {
-            console.log(error);
+      try {
+        const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php');
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          const newDrink = jsonResponse.drinks ? jsonResponse.drinks[0] : null;
+          setRandomDrink(newDrink);
+        } else {
+          throw new Error('Request failed!');
         }
+      } catch (error) {
+          console.log(error);
       }
     }
 
-    fetchRandom();    
-    }, [isClicked]);
-
     const handleClick = () => {
-        setIsClicked(true);
+        fetchRandom();
+        setIsClicked(!isClicked);
     };
 
     return (
@@ -147,20 +196,17 @@ export default function CocktailRequest({searchText}) {
         </div>
         
         <div>
-            <button onClick={handleClick}>
-                <img 
-                src={dice} 
-                alt="Dice for random coctail"
-                / >
+            <button className={styles.button} onClick={handleClick}>
+              GET A RANDOM ONE
             </button>
-            <>
-              {drink && (
+            <div className={styles.cocktailInfo}>
+              {randomDrink && (
                 <>
-                  <CocktailImg img={drink.strDrinkThumb} />
-                  <Recipe drink={drink} />
+                  <RandomCocktailImg randomImg={randomDrink.strDrinkThumb} />
+                  <RandomRecipe randomDrink={randomDrink} />
                 </>
               )}
-            </>
+            </div>
         </div>
       </div>
     );
